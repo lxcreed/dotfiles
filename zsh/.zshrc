@@ -147,6 +147,15 @@ alias vim='nvim'                  # 用 nvim 替代 vim
 alias c='clear'                   # 快速清屏
 
 
+
+# Alias for lsd
+if [[ -x "$(command -v lsd)" ]]; then
+	alias lsd='lsd -F --group-dirs first'
+	alias ll='lsd --header --long --group-dirs first'
+	alias tree='lsd --tree'
+fi
+
+
 # -----------------------------------------------------------------------------
 # 外部工具初始化
 # 放在配置末尾，确保上方所有设置已就绪
@@ -155,6 +164,12 @@ alias c='clear'                   # 快速清屏
 # fzf：模糊搜索集成
 # Ctrl-R 历史搜索 / Ctrl-T 文件搜索 / Alt-C 目录跳转
 source <(fzf --zsh)
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
+--color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
+--color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
+--color=selected-bg:#45475A \
+--color=border:#6C7086,label:#CDD6F4"
 
 # zoxide：智能目录跳转，替代 oh-my-zsh 的 z 插件
 # 记忆访问频率，`cd <模糊关键词>` 即可跳转到最匹配的目录
