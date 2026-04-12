@@ -343,3 +343,9 @@ eval "$(zoxide init --cmd cd zsh)"
 # starship：跨 shell 极速提示符，替代 oh-my-zsh 主题系统
 # 必须放在最后，确保在所有插件和工具初始化完成后再渲染提示符
 eval "$(starship init zsh)"
+
+
+# 配置nvm Node Version Manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
