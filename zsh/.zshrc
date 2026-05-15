@@ -1,10 +1,14 @@
 # -----------------------------------------------------------------------------
-# Homebrew 初始化（macOS）
+# Homebrew 初始化（macOS ARM: /opt/homebrew, macOS Intel: /usr/local, Linux: /home/linuxbrew/.linuxbrew）
 # 需在所有工具初始化之前执行，确保 PATH 中包含 brew 安装的命令
 # -----------------------------------------------------------------------------
-if [[ -f "/opt/homebrew/bin/brew" ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
+for _brew_prefix in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
+  if [[ -x "${_brew_prefix}/bin/brew" ]]; then
+    eval "$("${_brew_prefix}/bin/brew" shellenv)"
+    break
+  fi
+done
+unset _brew_prefix
 
 
 # -----------------------------------------------------------------------------
@@ -320,8 +324,8 @@ function mkdirg() {
 # --layout=reverse     输入框置顶，候选列表向下展开，符合自然阅读方向
 # --border=rounded     整体加圆角边框，视觉更精致
 # 配色方案基于 Catppuccin Mocha，与终端整体主题保持一致
-source <(fzf --zsh)
 if [[ -x "$(command -v fzf)" ]]; then
+    source <(fzf --zsh)
     export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
       --info=inline-right \
       --ansi \
@@ -338,7 +342,9 @@ fi
 
 # zoxide：智能目录跳转，替代 oh-my-zsh 的 z 插件
 # 记忆访问频率，`cd <模糊关键词>` 即可跳转到最匹配的目录
-eval "$(zoxide init --cmd cd zsh)"
+if [[ -x "$(command -v zoxide)" ]]; then
+    eval "$(zoxide init --cmd cd zsh)"
+fi
 
 # starship：跨 shell 极速提示符，替代 oh-my-zsh 主题系统
 # 必须放在最后，确保在所有插件和工具初始化完成后再渲染提示符
@@ -349,3 +355,9 @@ eval "$(starship init zsh)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+
+
+# -----------------------------------------------------------------------------
+# 本机专属配置（不纳入版本管理，各机器自行维护 ~/.zshrc.local）
+# -----------------------------------------------------------------------------
+[[ -f "${ZDOTDIR:-$HOME}/.zshrc.local" ]] && source "${ZDOTDIR:-$HOME}/.zshrc.local"
