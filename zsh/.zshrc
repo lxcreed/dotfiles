@@ -351,10 +351,26 @@ fi
 eval "$(starship init zsh)"
 
 
-# 配置nvm Node Version Manager
+# -----------------------------------------------------------------------------
+# nvm（Node Version Manager）初始化
+# 自适应探测常见安装路径，按优先级依次尝试，命中即停止：
+#   - /opt/homebrew/opt/nvm               macOS ARM (Apple Silicon) Homebrew
+#   - /usr/local/opt/nvm                  macOS Intel Homebrew
+#   - /home/linuxbrew/.linuxbrew/opt/nvm  Linuxbrew (Linux)
+#   - $HOME/.nvm                          官方 curl 安装脚本默认位置
+# NVM_DIR 始终指向 $HOME/.nvm（node 版本数据存放处），与脚本所在位置无关
+# 未安装 nvm 的机器自动跳过，不产生错误
+# -----------------------------------------------------------------------------
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+for _nvm_prefix in /opt/homebrew/opt/nvm /usr/local/opt/nvm /home/linuxbrew/.linuxbrew/opt/nvm "$HOME/.nvm"; do
+  if [[ -s "${_nvm_prefix}/nvm.sh" ]]; then
+    \. "${_nvm_prefix}/nvm.sh"
+    # 补全脚本可能不存在（如部分发行版只装核心），存在才加载
+    [[ -s "${_nvm_prefix}/etc/bash_completion.d/nvm" ]] && \. "${_nvm_prefix}/etc/bash_completion.d/nvm"
+    break
+  fi
+done
+unset _nvm_prefix
 
 
 # -----------------------------------------------------------------------------
