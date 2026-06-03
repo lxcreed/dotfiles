@@ -248,7 +248,7 @@ fi
 # Alias for lsd
 if [[ -x "$(command -v lsd)" ]]; then
 	alias lsd='lsd -F --group-dirs first'
-	alias ll='lsd --header --long --group-dirs first'
+	alias ll='lsd --header --long --all --group-dirs first'
 	alias tree='lsd --tree'
 fi
 
