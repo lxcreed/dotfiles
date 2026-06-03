@@ -28,11 +28,13 @@ app_icon = "default"
 
 [appearance.vertical_tabs]
 enabled = true
+primary_info = "command"
 
 [appearance.input]
 input_mode = "waterfall"
 
 [terminal]
+osc52_clipboard_access = "write_only"
 
 [terminal.input]
 honor_ps1 = false
@@ -46,12 +48,20 @@ right_alt = false
 cloud_conversation_storage_enabled = true
 
 [agents.warp_agent]
+is_any_ai_enabled = true
 
 [agents.warp_agent.input]
 nld_in_terminal_enabled = true
 
+[agents.warp_agent.other]
+show_conversation_history = true
+show_agent_notifications = true
+
 [agents.profiles]
 agent_mode_execute_readonly_commands = true
+
+[agents.third_party]
+should_render_cli_agent_toolbar = true
 
 [privacy]
 crash_reporting_enabled = true
@@ -103,3 +113,16 @@ play_notification_sound = true
 
 [warpify.ssh]
 use_ssh_tmux_wrapper = true
+
+[code]
+
+[code.editor]
+show_global_search = true
+show_code_review_button = true
+show_project_explorer = true
+
+[warp_drive]
+enabled = true
+
+[general]
+default_session_mode = "agent"
