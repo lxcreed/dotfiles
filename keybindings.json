@@ -9,7 +9,8 @@
         "args": {
             "commands": [
                 "workbench.action.files.save",
-                "editor.action.formatDocument"
+                // "editor.action.formatDocument",
+                "editor.action.formatChanges"
             ]
         },
         "when": "vim.mode == 'Normal' && editorTextFocus"
