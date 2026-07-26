@@ -99,6 +99,7 @@ custom_secret_regex_list = [
 ]
 
 [notifications]
+toast_duration_secs = 8
 
 [notifications.preferences]
 is_agent_task_completed_enabled = true
