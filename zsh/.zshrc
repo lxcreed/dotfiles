@@ -89,6 +89,18 @@ zinit snippet OMZP::docker
 # 必须在所有补全规则（插件/片段）加载完成之后调用
 # zinit cdreplay -q：重放 zinit 在加载过程中缓存的 compdef 调用
 # -----------------------------------------------------------------------------
+
+# 修正 fpath：剔除继承自其他 zsh 版本的补全目录，
+# 强制使用当前 zsh 二进制自带的函数目录，避免
+# _arguments:comparguments: not enough arguments
+typeset -U fpath
+_zsh_bin=${$(whence -p zsh):A}
+_zsh_fns=${_zsh_bin:h:h}/share/zsh/functions
+fpath=( ${fpath:#/usr/share/zsh/functions*} )
+[[ -d $_zsh_fns ]] && fpath=( $_zsh_fns $fpath )
+unset _zsh_bin _zsh_fns
+typeset +x FPATH   # 取消导出，避免再污染子 shell
+
 autoload -Uz compinit && compinit
 zinit cdreplay -q
 
