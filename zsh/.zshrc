@@ -264,12 +264,6 @@ if [[ -x "$(command -v lsd)" ]]; then
 	alias tree='lsd --tree'
 fi
 
-# fzf 增强别名
-# fzf：模糊搜索，默认附带 bat 语法高亮预览，只显示前 500 行防止大文件卡顿
-if [[ -x "$(command -v fzf)" ]]; then
-    alias fzf='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
-    alias preview='edit $(fzf --info=inline --query="${@}")'  # 模糊搜索文件并在编辑器中打开
-fi
 
 
 # 网络诊断
@@ -336,11 +330,12 @@ function mkdirg() {
 # --layout=reverse     输入框置顶，候选列表向下展开，符合自然阅读方向
 # --border=rounded     整体加圆角边框，视觉更精致
 # 配色方案基于 Catppuccin Mocha，与终端整体主题保持一致
-if [[ -x "$(command -v fzf)" ]]; then
+if (( $+commands[fzf] )); then
     source <(fzf --zsh)
     export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
       --info=inline-right \
       --ansi \
+      --height 40% \
       --layout=reverse \
       --border=rounded \
       --color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
@@ -349,6 +344,14 @@ if [[ -x "$(command -v fzf)" ]]; then
       --color=selected-bg:#45475A \
       --color=border:#6C7086,label:#CDD6F4 \
     "
+fi
+
+
+# fzf 增强别名 / 要位于fzf --zsh之后
+# fzf：模糊搜索，默认附带 bat 语法高亮预览，只显示前 500 行防止大文件卡顿
+if (( $+commands[fzf] )); then
+    alias fzf='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
+    alias preview='edit $(fzf --info=inline --query="${@}")'  # 模糊搜索文件并在编辑器中打开
 fi
 
 
