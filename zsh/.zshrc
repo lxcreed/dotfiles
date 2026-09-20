@@ -1,4 +1,24 @@
 # -----------------------------------------------------------------------------
+# 语言环境（locale）
+# 必须在任何提示符/插件加载之前设置。
+# 若 LC_CTYPE 不是 UTF-8（如 SSH 未传 LANG 时回落到 POSIX/C），zsh 会把
+# starship 提示符里的每个多字节图标按“字节数”而非“列宽”计算，
+# 导致 ZLE 误判行宽，长命令行显示错乱。
+# 选择系统中实际存在的 UTF-8 locale，找不到则回落到 C.UTF-8。
+# -----------------------------------------------------------------------------
+if [[ -z ${LC_ALL:-} && ( -z ${LANG:-} || ${LANG:-} != *[Uu][Tt][Ff]* ) ]]; then
+  for _loc in en_US.UTF-8 C.UTF-8; do
+    if locale -a 2>/dev/null | grep -qiE "^${_loc//./\\.}$|^${${_loc//UTF-8/utf8}//./\\.}$"; then
+      export LANG="$_loc"
+      break
+    fi
+  done
+  unset _loc
+fi
+export LC_CTYPE="${LC_ALL:-${LANG:-C.UTF-8}}"
+
+
+# -----------------------------------------------------------------------------
 # Homebrew 初始化（macOS ARM: /opt/homebrew, macOS Intel: /usr/local, Linux: /home/linuxbrew/.linuxbrew）
 # 需在所有工具初始化之前执行，确保 PATH 中包含 brew 安装的命令
 # -----------------------------------------------------------------------------
