@@ -116,6 +116,18 @@ vim.o.showmode = false
 --  See `:help 'clipboard'`
 vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 
+-- 远程 SSH + zellij 环境：无 X11/Wayland，强制使用 OSC 52 把复制内容发送到本地终端(Warp)
+-- 粘贴使用 nvim 内部寄存器（多数终端禁止/不支持 OSC 52 读取，避免卡住）；本地内容请用终端粘贴 Ctrl+Shift+V / Cmd+V
+if os.getenv 'SSH_TTY' or os.getenv 'ZELLIJ' then
+  local osc52 = require 'vim.ui.clipboard.osc52'
+  local function paste() return { vim.split(vim.fn.getreg '"', '\n'), vim.fn.getregtype '"' } end
+  vim.g.clipboard = {
+    name = 'OSC 52',
+    copy = { ['+'] = osc52.copy '+', ['*'] = osc52.copy '*' },
+    paste = { ['+'] = paste, ['*'] = paste },
+  }
+end
+
 -- Enable break indent
 vim.o.breakindent = true
 
